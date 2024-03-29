@@ -22,6 +22,18 @@ from frappe.utils import cstr, date_diff, file_lock, flt, get_datetime_str, now
 from frappe.utils.data import get_absolute_url, get_datetime, get_timedelta, getdate
 from frappe.utils.global_search import update_global_search
 
+<<<<<<< HEAD
+=======
+if TYPE_CHECKING:
+	from typing_extensions import Self
+
+	from frappe.core.doctype.docfield.docfield import DocField
+
+
+DOCUMENT_LOCK_EXPIRTY = 12 * 60 * 60  # All locks expire in 12 hours automatically
+DOCUMENT_LOCK_SOFT_EXPIRY = 60 * 60  # Let users force-unlock after 60 minutes
+
+>>>>>>> b493bfe7c2 (fix(DX): annotate chainable methods with `Self` return)
 
 def get_doc(*args, **kwargs):
 	"""returns a frappe.model.Document object.
@@ -127,7 +139,7 @@ class Document(BaseDocument):
 		frappe.whitelist()(fn)
 		return fn
 
-	def load_from_db(self):
+	def load_from_db(self) -> "Self":
 		"""Load document and children from database and create properties
 		from fields"""
 		self.flags.ignore_children = True
@@ -180,7 +192,7 @@ class Document(BaseDocument):
 
 		return self
 
-	def reload(self):
+	def reload(self) -> "Self":
 		"""Reload document from database"""
 		return self.load_from_db()
 
@@ -225,7 +237,7 @@ class Document(BaseDocument):
 		ignore_mandatory=None,
 		set_name=None,
 		set_child_names=True,
-	) -> "Document":
+	) -> "Self":
 		"""Insert the document in the database (as a new document).
 		This will check for user permissions and execute `before_insert`,
 		`validate`, `on_update`, `after_insert` methods if they are written.
@@ -302,11 +314,19 @@ class Document(BaseDocument):
 				follow_document(self.doctype, self.name, frappe.session.user)
 		return self
 
+<<<<<<< HEAD
 	def save(self, *args, **kwargs):
+=======
+	def check_if_locked(self):
+		if self.creation and self.is_locked:
+			raise frappe.DocumentLockedError
+
+	def save(self, *args, **kwargs) -> "Self":
+>>>>>>> b493bfe7c2 (fix(DX): annotate chainable methods with `Self` return)
 		"""Wrapper for _save"""
 		return self._save(*args, **kwargs)
 
-	def _save(self, ignore_permissions=None, ignore_version=None) -> "Document":
+	def _save(self, ignore_permissions=None, ignore_version=None) -> "Self":
 		"""Save the current document in the database in the **DocType**'s table or
 		`tabSingles` (for single types).
 
