@@ -53,10 +53,16 @@ class MariaDBTable(DBTable):
 			modified datetime(6),
 			modified_by varchar({varchar_len}),
 			owner varchar({varchar_len}),
+<<<<<<< HEAD
 			docstatus int(1) not null default '0',
 			idx int(8) not null default '0',
 			{additional_definitions}
 			index modified(modified))
+=======
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			{additional_definitions})
+>>>>>>> eef9c2c8cc (refactor!: Better Integer handling)
 			ENGINE={engine}
 			ROW_FORMAT=DYNAMIC
 			CHARACTER SET=utf8mb4
